@@ -2,10 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+char *document;
+
 int g_lines, g_columns;
 void minibufmsg(char *s);
 
 int main(int argc, char **argv) {
+    document = malloc(2 << 15);
+    document[0] = '\0';
+
     initscr();
     getmaxyx(stdscr, g_lines, g_columns);
     minibufmsg("Press any key to quit.");
