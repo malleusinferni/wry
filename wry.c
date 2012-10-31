@@ -16,7 +16,9 @@ int main(int argc, char **argv) {
     initscr();
     getmaxyx(stdscr, g_lines, g_columns);
     minibufmsg("Press any key to quit.");
-    printw("LINES=%d\nCOLS=%d\n", g_lines, g_columns);
+
+    printw("%s\n", document);
+
     refresh();
     getch();
     endwin();
