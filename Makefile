@@ -1,6 +1,8 @@
 LDFLAGS=-lncurses
 
-all: wry
+all: test
+
+test: wry
 	./wry
 
 clean:
