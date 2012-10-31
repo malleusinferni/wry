@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define DOC_SIZE (2 << 15)
 #define RULER_SIZE 80
 
 char *document;
@@ -10,7 +11,7 @@ int g_lines, g_columns;
 void minibufmsg(char *s);
 
 int main(int argc, char **argv) {
-    document = malloc(2 << 15);
+    document = malloc(DOC_SIZE);
     document[0] = '\0';
 
     initscr();
