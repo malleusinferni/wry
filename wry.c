@@ -27,12 +27,12 @@ void minibufmsg(char *s) {
     int cy, cx, y, x, rlen;
     char ruler[RULER_SIZE];
     snprintf(ruler, RULER_SIZE,
-        "%luch", strlen(document));
-    rlen = strlen(ruler) + 1;
+        " %luch    ", strlen(document));
+    rlen = strlen(ruler);
     getyx(stdscr, cy, cx);
     getmaxyx(stdscr, y, x);
     mvprintw(y - 1, 0, "%s", s);
-    if (strlen(s) + 1 < x - rlen)
+    if (strlen(s) < x - rlen)
         mvprintw(y - 1, x - rlen, "%s", ruler);
     move(cy, cx);
 }
