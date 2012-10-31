@@ -12,11 +12,12 @@ struct {
 
 int g_lines, g_columns;
 void minibufmsg(char *s);
+void document_wc(void);
 
 int main(int argc, char **argv) {
     document.text = malloc(DOC_SIZE);
     document.text[0] = '\0';
-    document.char_count = 0;
+    document_wc();
 
     initscr();
     getmaxyx(stdscr, g_lines, g_columns);
@@ -42,5 +43,13 @@ void minibufmsg(char *s) {
     if (strlen(s) < x - rlen)
         mvprintw(y - 1, x - rlen, "%s", ruler);
     move(cy, cx);
+}
+
+void document_wc() {
+    int i = 0;
+    while (document.text[i]) {
+        i++;
+    }
+    document.char_count = i;
 }
 
