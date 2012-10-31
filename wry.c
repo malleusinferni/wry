@@ -32,7 +32,8 @@ void minibufmsg(char *s) {
     getyx(stdscr, cy, cx);
     getmaxyx(stdscr, y, x);
     mvprintw(y - 1, 0, "%s", s);
-    mvprintw(y - 1, x - rlen, "%s", ruler);
+    if (strlen(s) + 1 < x - rlen)
+        mvprintw(y - 1, x - rlen, "%s", ruler);
     move(cy, cx);
 }
 
