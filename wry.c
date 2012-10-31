@@ -8,6 +8,7 @@
 struct {
     char *text;
     size_t char_count;
+    size_t line_count;
 } document;
 
 int g_lines, g_columns;
@@ -35,7 +36,9 @@ void minibufmsg(char *s) {
     int cy, cx, y, x, rlen;
     char ruler[RULER_SIZE];
     snprintf(ruler, RULER_SIZE,
-        " %luch    ", document.char_count);
+        " %luln %luch    ",
+        document.line_count,
+        document.char_count);
     rlen = strlen(ruler);
     getyx(stdscr, cy, cx);
     getmaxyx(stdscr, y, x);
@@ -46,10 +49,13 @@ void minibufmsg(char *s) {
 }
 
 void document_wc() {
-    int i = 0;
+    int i = 0, l = 1;
     while (document.text[i]) {
         i++;
+        if (document.text[i] == '\n')
+            l++;
     }
     document.char_count = i;
+    document.line_count = l;
 }
 
