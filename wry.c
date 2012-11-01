@@ -45,9 +45,11 @@ void minibufmsg(char *s) {
     rlen = strlen(ruler);
     getyx(stdscr, cy, cx);
     getmaxyx(stdscr, y, x);
+    attron(A_BOLD);
     mvprintw(y - 1, 0, "%s", s);
     if (strlen(s) < x - rlen)
         mvprintw(y - 1, x - rlen, "%s", ruler);
+    attroff(A_BOLD);
     move(cy, cx);
 }
 
