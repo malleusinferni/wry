@@ -60,7 +60,7 @@ void tail_test(int n, int argc, char **argv) {
 
 void line_test() {
     int i, len;
-    char LINE_TEST[] = "This is only a test.",
+    char LINE_TEST[] = "This is only    a test.",
          LINE_BUFF[BUFF_SIZE];
     for (i = 0; i < strlen(LINE_TEST); i++) {
         insert_ch(LINE_TEST[i]);
@@ -134,9 +134,11 @@ void insert_ch(char c) {
     if (c == '\n') {
         break_at(buf.i);
     } else {
-        if (isspace(c) && buf.inword) {
-            buf.wbreak = buf.i;
-            buf.inword = FALSE;
+        if (isspace(c)) {
+            if (buf.inword) {
+                buf.wbreak = buf.i;
+                buf.inword = FALSE;
+            }
         } else if (!buf.inword) {
             buf.inword = TRUE;
         }
