@@ -16,7 +16,16 @@ struct {
 void read_file(FILE *h);
 
 int main(int argc, char **argv) {
-    read_file(stdin);
+    int i;
+    if (argc < 2)
+        read_file(stdin);
+    for (i = 1; i < argc; i++) {
+        FILE *in = fopen(argv[i], "r");
+        if (in) {
+            read_file(in);
+            fclose(in);
+        }
+    }
     return 0;
 }
 
