@@ -22,7 +22,7 @@ struct {
     size_t chars, words, lines;
 } total;
 
-void read_file(FILE *h);
+void read_file(char *name);
 void minibufmsg(char *s);
 
 void init_buf(void);
@@ -46,11 +46,16 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void read_file(FILE *h) {
+void read_file(char *name) {
+    FILE *h;
     char c;
+    if (!(h = fopen(name, "r"))) {
+        return;
+    }
     while ((c = getc(h)) != EOF) {
         append_buf(c);
     }
+    fclose(h);
 }
 
 void minibufmsg(char *s) {
