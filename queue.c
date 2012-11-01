@@ -16,7 +16,7 @@ typedef struct line_t {
 
 struct {
     char s[BUFF_SIZE];
-    size_t i, wbreak;
+    size_t i, wc, wbreak;
     bool inword;
     line_t *top, *bot;
 } buf;
@@ -73,10 +73,11 @@ void line_test() {
         LINE_BUFF[len] = '\0';
         printf("%s\n", LINE_BUFF);
     }
+    printf("%lu words\n", buf.wc);
 }
 
 void init_buf() {
-    buf.i = 0;
+    buf.i = buf.wc = 0;
     buf.inword = FALSE;
     buf.top = buf.bot = NULL;
     total.chars = total.words = total.lines = 0;
@@ -141,6 +142,7 @@ void insert_ch(char c) {
             }
         } else if (!buf.inword) {
             buf.inword = TRUE;
+            buf.wc++;
         }
         buf.s[buf.i] = c;
         buf.i++;
