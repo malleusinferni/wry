@@ -26,6 +26,7 @@ struct {
 } total;
 
 void init_buf(void);
+void reset_buf(char *s);
 void append_buf(char c);
 void print_queue(void);
 void drop_until(int count);
@@ -83,10 +84,19 @@ void line_test() {
 }
 
 void init_buf() {
-    buf.i = buf.wc = buf.wbreak = buf.wbeg = 0;
-    buf.inword = FALSE;
+    reset_buf("");
     buf.top = buf.bot = NULL;
     total.chars = total.words = total.lines = 0;
+}
+
+void reset_buf(char *s) {
+    buf.i = buf.wc = buf.wbreak = buf.wbeg = 0;
+    buf.inword = FALSE;
+    if (s != NULL) {
+        int i, len = strlen(s);
+        for (i = 0; i < len; i++)
+            insert_ch(s[i]);
+    }
 }
 
 void push_line(char *s) {
