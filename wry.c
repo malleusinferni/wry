@@ -96,6 +96,7 @@ void reset_buf(char *s) {
 void append_buf(char c) {
     if (c == '\n') {
         break_at(buf.i);
+        reset_buf("");
     } else {
         insert_ch(c);
         if (buf.i > WRAP_SIZE) {
@@ -128,7 +129,6 @@ void insert_ch(char c) {
 void break_at(size_t i) {
     buf.s[i] = '\0';
     push_line(buf.s);
-    buf.i = 0;
 }
 
 void push_line(char *s) {
