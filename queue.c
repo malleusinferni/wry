@@ -26,6 +26,7 @@ void drop_until(int count);
 void shift_line(void);
 void push_line(char *s);
 void insert_ch(char c);
+void break_at(size_t i);
 void read_file(FILE *h);
 
 int main(int argc, char **argv) {
@@ -92,11 +93,15 @@ void drop_until(int count) {
     }
 }
 
+void break_at(size_t i) {
+    buf.s[i] = '\0';
+    push_line(buf.s);
+    buf.i = 0;
+}
+
 void insert_ch(char c) {
     if (c == '\n') {
-        buf.s[buf.i] = '\0';
-        push_line(buf.s);
-        buf.i = 0;
+        break_at(buf.i);
     } else {
         buf.s[buf.i] = c;
         buf.i++;
