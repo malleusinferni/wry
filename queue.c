@@ -5,10 +5,6 @@
 #define BUFF_SIZE 80
 #define WRAP_SIZE 65
 
-size_t total_chars = 0,
-       total_words = 0,
-       total_lines = 0;
-
 typedef struct line_t {
     struct line_t *next;
     char s[0];
@@ -19,6 +15,10 @@ struct {
     size_t i;
     line_t *top, *bot;
 } buf;
+
+struct {
+    size_t chars, words, lines;
+} total;
 
 void init_buf(void);
 void print_queue(void);
@@ -49,6 +49,7 @@ int main(int argc, char **argv) {
 void init_buf() {
     buf.i = 0;
     buf.top = buf.bot = NULL;
+    total.chars = total.words = total.lines = 0;
 }
 
 void push_line(char *s) {
