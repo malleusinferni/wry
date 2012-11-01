@@ -21,6 +21,8 @@ struct {
 } buf;
 
 void print_queue(void);
+void drop_until(int count);
+void shift_line(void);
 void push_line(char *s);
 void read_file(FILE *h);
 
@@ -35,6 +37,7 @@ int main(int argc, char **argv) {
             fclose(in);
         }
     }
+    drop_until(12);
     print_queue();
     return 0;
 }
@@ -53,11 +56,31 @@ void push_line(char *s) {
     }
 }
 
+void shift_line() {
+    line_t *temp = buf.top;
+    buf.top = temp->next;
+    free(temp);
+}
+
 void print_queue() {
     line_t *line = buf.top;
     while (line) {
         puts(line->s);
         line = line->next;
+    }
+}
+
+void drop_until(int count) {
+    int qsize = 0;
+    line_t *line = buf.top;
+    while (line) {
+        line = line->next;
+        qsize++;
+    }
+
+    while (qsize > count) {
+        shift_line();
+        qsize--;
     }
 }
 
