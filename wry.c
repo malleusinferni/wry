@@ -40,6 +40,7 @@ int main(int argc, char **argv) {
     init_buf();
     initscr();
     if (argc > 1) read_file(argv[1]);
+    drop_until(getmaxy(stdscr) / 2);
     print_queue();
     minibufmsg("Press any key to quit.");
 
