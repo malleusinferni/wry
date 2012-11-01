@@ -3,7 +3,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#define RULER_SIZE 80
 #define BUFF_SIZE 80
 #define WRAP_SIZE 65
 
@@ -37,10 +36,12 @@ int main(int argc, char **argv) {
 
 void minibufmsg(char *s) {
     int cy, cx, y, x, rlen;
-    char ruler[RULER_SIZE];
-    snprintf(ruler, RULER_SIZE,
+    char ruler[BUFF_SIZE];
+    snprintf(ruler, BUFF_SIZE,
         " %luln %luwd %luch    ",
-        0l, 0l, 0l);
+        total.lines,
+        total.words,
+        total.chars);
     rlen = strlen(ruler);
     getyx(stdscr, cy, cx);
     getmaxyx(stdscr, y, x);
