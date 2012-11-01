@@ -13,9 +13,16 @@ struct {
     size_t i;
 } buf;
 
+void read_file(FILE *h);
+
 int main(int argc, char **argv) {
+    read_file(stdin);
+    return 0;
+}
+
+void read_file(FILE *h) {
     char c;
-    while ((c = getc(stdin)) != EOF) {
+    while ((c = getc(h)) != EOF) {
         if (c == '\n') {
             buf.s[buf.i] = '\0';
             puts(buf.s);
@@ -24,7 +31,6 @@ int main(int argc, char **argv) {
             buf.s[buf.i++] = c;
         }
     }
-    return 0;
 }
 
 
