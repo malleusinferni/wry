@@ -63,9 +63,9 @@ void minibufmsg(char *s) {
     char ruler[BUFF_SIZE];
     snprintf(ruler, BUFF_SIZE,
         " %luln %luwd %luch    ",
-        total.lines,
-        total.words,
-        total.chars);
+        total.lines + 1,
+        total.words + buf.wc,
+        total.chars + buf.i);
     rlen = strlen(ruler);
     getyx(stdscr, cy, cx);
     getmaxyx(stdscr, y, x);
