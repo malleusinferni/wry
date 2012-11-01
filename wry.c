@@ -16,6 +16,7 @@ struct {
 int g_lines, g_columns;
 void minibufmsg(char *s);
 void document_wc(void);
+void document_readfile(char *name);
 
 int main(int argc, char **argv) {
     document.text = malloc(DOC_SIZE);
@@ -71,5 +72,24 @@ void document_wc() {
     document.char_count = i;
     document.word_count = w;
     document.line_count = l;
+}
+
+void document_readfile(char *name) {
+    char *line;
+    size_t linelen;
+    FILE *h = fopen(name, "r+");
+    if (!h) {
+        minibufmsg("Can't open file");
+        return;
+    }
+
+    // TODO: Use a more portable solution.
+    // fgetln() doesn't seem to be available in Linux.
+    while ((line = fgetln(h, &linelen))) {
+        strncat(document.text, line, linelen);
+    }
+    fclose(h);
+
+    document_wc();
 }
 
