@@ -104,6 +104,7 @@ void append_buf(char c) {
             if (buf.inword) {
                 // TODO Handle words too long to wrap
                 strncpy(save, buf.s + buf.wbeg, buf.i - buf.wbeg);
+                buf.wc--;
             }
             break_at(buf.wbreak);
             reset_buf(save);
@@ -128,6 +129,9 @@ void insert_ch(char c) {
 
 void break_at(size_t i) {
     buf.s[i] = '\0';
+    total.words += buf.wc;
+    total.chars += strlen(buf.s) + 1;
+    total.lines++;
     push_line(buf.s);
 }
 
