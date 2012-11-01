@@ -38,12 +38,12 @@ void read_file(FILE *h);
 void tail_test(int n, int argc, char **argv);
 void line_test(void);
 void reset_test(void);
+void wbeg_test(void);
 
 int main(int argc, char **argv) {
     int i;
     init_buf();
-    line_test();
-    reset_test();
+    wbeg_test();
     return 0;
 }
 
@@ -91,6 +91,12 @@ void reset_test() {
     strncpy(LINE_BUFF, buf.s, buf.i);
     LINE_BUFF[buf.i] = '\0';
     printf("RESET (%lu words): %s\n", buf.wc, LINE_BUFF);
+}
+
+void wbeg_test() {
+    reset_buf("THIS TEST IS A SUCCESS");
+    buf.s[buf.i] = '\0';
+    printf("%s\n", buf.s + buf.wbeg);
 }
 
 void init_buf() {
