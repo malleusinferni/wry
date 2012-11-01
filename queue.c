@@ -59,18 +59,20 @@ void tail_test(int n, int argc, char **argv) {
 }
 
 void line_test() {
-    int i, len;
+    int i, j, x;
     char LINE_TEST[] = "This is only    a test.",
          LINE_BUFF[BUFF_SIZE];
     for (i = 0; i < strlen(LINE_TEST); i++) {
         insert_ch(LINE_TEST[i]);
-        len = buf.wbreak;
-        strncpy(LINE_BUFF, buf.s, len);
-        LINE_BUFF[len] = '\0';
-        printf("%s|", LINE_BUFF);
-        len = buf.i - len;
-        strncpy(LINE_BUFF, buf.s + buf.wbreak, len);
-        LINE_BUFF[len] = '\0';
+        x = 0;
+        for (j = 0; j < buf.i; j++) {
+            if (j == buf.wbreak) {
+                LINE_BUFF[j + x] = '|';
+                x++;
+            }
+            LINE_BUFF[j + x] = buf.s[j];
+        }
+        LINE_BUFF[j + x] = '\0';
         printf("%s\n", LINE_BUFF);
     }
     printf("%lu words\n", buf.wc);
