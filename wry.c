@@ -37,7 +37,10 @@ void drop_until(int count);
 void print_queue(void);
 
 int main(int argc, char **argv) {
+    init_buf();
     initscr();
+    if (argc > 1) read_file(argv[1]);
+    print_queue();
     minibufmsg("Press any key to quit.");
 
     refresh();
