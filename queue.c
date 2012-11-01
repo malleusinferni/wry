@@ -7,16 +7,6 @@
 #define TRUE 1
 #define FALSE 0
 
-void init_buf(void);
-void reset_buf(char *s);
-void append_buf(char c);
-void print_queue(void);
-void drop_until(int count);
-void shift_line(void);
-void push_line(char *s);
-void insert_ch(char c);
-void break_at(size_t i);
-void read_file(FILE *h);
 void tail_test(int n, int argc, char **argv);
 void line_test(void);
 void reset_test(void);

@@ -22,7 +22,19 @@ struct {
     size_t chars, words, lines;
 } total;
 
+void read_file(FILE *h);
 void minibufmsg(char *s);
+
+void init_buf(void);
+void reset_buf(char *s);
+void append_buf(char c);
+void insert_ch(char c);
+void break_at(size_t i);
+
+void push_line(char *s);
+void shift_line(void);
+void drop_until(int count);
+void print_queue(void);
 
 int main(int argc, char **argv) {
     initscr();
