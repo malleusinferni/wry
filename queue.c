@@ -16,7 +16,7 @@ typedef struct line_t {
 
 struct {
     char s[BUFF_SIZE];
-    size_t i, wc, wbreak;
+    size_t i, wc, wbreak, wbeg;
     bool inword;
     line_t *top, *bot;
 } buf;
@@ -66,9 +66,12 @@ void line_test() {
         insert_ch(LINE_TEST[i]);
         x = 0;
         for (j = 0; j < buf.i; j++) {
-            if (j == buf.wbreak) {
-                LINE_BUFF[j + x] = '|';
-                x++;
+            if (j == buf.wbreak && j == buf.wbeg) {
+                LINE_BUFF[j + x++] = '|';
+            } else if (j == buf.wbreak) {
+                LINE_BUFF[j + x++] = '[';
+            } else if (j == buf.wbeg) {
+                LINE_BUFF[j + x++] = ']';
             }
             LINE_BUFF[j + x] = buf.s[j];
         }
@@ -79,7 +82,7 @@ void line_test() {
 }
 
 void init_buf() {
-    buf.i = buf.wc = 0;
+    buf.i = buf.wc = buf.wbreak = buf.wbeg = 0;
     buf.inword = FALSE;
     buf.top = buf.bot = NULL;
     total.chars = total.words = total.lines = 0;
@@ -142,6 +145,7 @@ void insert_ch(char c) {
                 buf.wbreak = buf.i;
                 buf.inword = FALSE;
             }
+            buf.wbeg = buf.i + 1;
         } else if (!buf.inword) {
             buf.inword = TRUE;
             buf.wc++;
