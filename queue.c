@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define BUFF_SIZE 80
 #define WRAP_SIZE 65
@@ -8,11 +9,19 @@ size_t total_chars = 0,
        total_words = 0,
        total_lines = 0;
 
+typedef struct line_t {
+    struct line_t *next;
+    char s[0];
+} line_t;
+
 struct {
     char s[BUFF_SIZE];
     size_t i;
+    line_t *top, *bot;
 } buf;
 
+void print_queue(void);
+void push_line(char *s);
 void read_file(FILE *h);
 
 int main(int argc, char **argv) {
@@ -26,7 +35,30 @@ int main(int argc, char **argv) {
             fclose(in);
         }
     }
+    print_queue();
     return 0;
+}
+
+void push_line(char *s) {
+    size_t len = strlen(s) + 1;
+    line_t *nl = malloc(sizeof(line_t) + len);
+    strncpy(nl->s, s, len);
+    nl->next = NULL;
+    if (buf.top) {
+        buf.bot->next = nl;
+        buf.bot = nl;
+    } else {
+        buf.top = nl;
+        buf.bot = nl;
+    }
+}
+
+void print_queue() {
+    line_t *line = buf.top;
+    while (line) {
+        puts(line->s);
+        line = line->next;
+    }
 }
 
 void read_file(FILE *h) {
@@ -34,7 +66,7 @@ void read_file(FILE *h) {
     while ((c = getc(h)) != EOF) {
         if (c == '\n') {
             buf.s[buf.i] = '\0';
-            puts(buf.s);
+            push_line(buf.s);
             buf.i = 0;
         } else {
             buf.s[buf.i++] = c;
