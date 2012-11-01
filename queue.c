@@ -183,6 +183,15 @@ void append_buf(char c) {
         break_at(buf.i);
     } else {
         insert_ch(c);
+        if (buf.i > WRAP_SIZE) {
+            char save[BUFF_SIZE] = "";
+            if (buf.inword) {
+                // TODO Handle words too long to wrap
+                strncpy(save, buf.s + buf.wbeg, buf.i - buf.wbeg);
+            }
+            break_at(buf.wbreak);
+            reset_buf(save);
+        }
     }
 }
 
