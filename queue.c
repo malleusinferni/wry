@@ -28,23 +28,29 @@ void push_line(char *s);
 void insert_ch(char c);
 void break_at(size_t i);
 void read_file(FILE *h);
+void tail_test(int n, int argc, char **argv);
 void line_test(void);
 
 int main(int argc, char **argv) {
     int i;
     init_buf();
+    tail_test(12, argc, argv);
+    return 0;
+}
+
+void tail_test(int n, int argc, char **argv) {
+    int i;
+    FILE *in;
     if (argc < 2)
         read_file(stdin);
     for (i = 1; i < argc; i++) {
-        FILE *in = fopen(argv[i], "r");
-        if (in) {
+        if ((in = fopen(argv[i], "r"))) {
             read_file(in);
             fclose(in);
         }
     }
-    drop_until(12);
+    drop_until(n);
     print_queue();
-    return 0;
 }
 
 void line_test() {
