@@ -28,6 +28,7 @@ void push_line(char *s);
 void insert_ch(char c);
 void break_at(size_t i);
 void read_file(FILE *h);
+void line_test(void);
 
 int main(int argc, char **argv) {
     int i;
@@ -44,6 +45,18 @@ int main(int argc, char **argv) {
     drop_until(12);
     print_queue();
     return 0;
+}
+
+void line_test() {
+    int i;
+    char LINE_TEST[] = "This is only a test.",
+         LINE_BUFF[BUFF_SIZE];
+    for (i = 0; i < strlen(LINE_TEST); i++) {
+        insert_ch(LINE_TEST[i]);
+        strncpy(LINE_BUFF, buf.s, buf.i);
+        LINE_BUFF[buf.i] = '\0';
+        printf("%s\n", LINE_BUFF);
+    }
 }
 
 void init_buf() {
