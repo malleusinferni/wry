@@ -62,7 +62,7 @@ void minibufmsg(char *s) {
     int cy, cx, y, x, rlen;
     char ruler[BUFF_SIZE];
     snprintf(ruler, BUFF_SIZE,
-        " %luln %luwd %luch    ",
+        " Ln %lu Wd %lu Ch %lu    ",
         total.lines + 1,
         total.words + buf.wc,
         total.chars + buf.i);
