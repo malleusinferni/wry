@@ -26,6 +26,7 @@ struct {
 } total;
 
 void init_buf(void);
+void append_buf(char c);
 void print_queue(void);
 void drop_until(int count);
 void shift_line(void);
@@ -63,7 +64,7 @@ void line_test() {
     char LINE_TEST[] = "This is only    a test.",
          LINE_BUFF[BUFF_SIZE];
     for (i = 0; i < strlen(LINE_TEST); i++) {
-        insert_ch(LINE_TEST[i]);
+        append_buf(LINE_TEST[i]);
         x = 0;
         for (j = 0; j < buf.i; j++) {
             if (j == buf.wbreak && j == buf.wbeg) {
@@ -137,28 +138,32 @@ void break_at(size_t i) {
 }
 
 void insert_ch(char c) {
+    if (isspace(c)) {
+        if (buf.inword) {
+            buf.wbreak = buf.i;
+            buf.inword = FALSE;
+        }
+        buf.wbeg = buf.i + 1;
+    } else if (!buf.inword) {
+        buf.inword = TRUE;
+        buf.wc++;
+    }
+    buf.s[buf.i] = c;
+    buf.i++;
+}
+
+void append_buf(char c) {
     if (c == '\n') {
         break_at(buf.i);
     } else {
-        if (isspace(c)) {
-            if (buf.inword) {
-                buf.wbreak = buf.i;
-                buf.inword = FALSE;
-            }
-            buf.wbeg = buf.i + 1;
-        } else if (!buf.inword) {
-            buf.inword = TRUE;
-            buf.wc++;
-        }
-        buf.s[buf.i] = c;
-        buf.i++;
+        insert_ch(c);
     }
 }
 
 void read_file(FILE *h) {
     char c;
     while ((c = getc(h)) != EOF) {
-        insert_ch(c);
+        append_buf(c);
     }
 }
 
