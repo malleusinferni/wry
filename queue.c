@@ -20,6 +20,7 @@ struct {
     line_t *top, *bot;
 } buf;
 
+void init_buf(void);
 void print_queue(void);
 void drop_until(int count);
 void shift_line(void);
@@ -28,6 +29,7 @@ void read_file(FILE *h);
 
 int main(int argc, char **argv) {
     int i;
+    init_buf();
     if (argc < 2)
         read_file(stdin);
     for (i = 1; i < argc; i++) {
@@ -40,6 +42,11 @@ int main(int argc, char **argv) {
     drop_until(12);
     print_queue();
     return 0;
+}
+
+void init_buf() {
+    buf.i = 0;
+    buf.top = buf.bot = NULL;
 }
 
 void push_line(char *s) {
