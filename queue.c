@@ -10,10 +10,20 @@ size_t total_chars = 0,
 
 struct {
     char s[BUFF_SIZE];
+    size_t i;
 } buf;
 
 int main(int argc, char **argv) {
-    puts(gets(buf.s));
+    char c;
+    while ((c = getc(stdin)) != EOF) {
+        if (c == '\n') {
+            buf.s[buf.i] = '\0';
+            puts(buf.s);
+            buf.i = 0;
+        } else {
+            buf.s[buf.i++] = c;
+        }
+    }
     return 0;
 }
 
