@@ -4,6 +4,24 @@
 #include <ctype.h>
 
 #define RULER_SIZE 80
+#define BUFF_SIZE 80
+#define WRAP_SIZE 65
+
+typedef struct line_t {
+    struct line_t *next;
+    char s[0];
+} line_t;
+
+struct {
+    char s[BUFF_SIZE];
+    size_t i, wc, wbreak, wbeg;
+    bool inword;
+    line_t *top, *bot;
+} buf;
+
+struct {
+    size_t chars, words, lines;
+} total;
 
 void minibufmsg(char *s);
 

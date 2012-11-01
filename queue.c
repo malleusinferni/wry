@@ -6,24 +6,6 @@
 #define bool char
 #define TRUE 1
 #define FALSE 0
-#define BUFF_SIZE 80
-#define WRAP_SIZE 65
-
-typedef struct line_t {
-    struct line_t *next;
-    char s[0];
-} line_t;
-
-struct {
-    char s[BUFF_SIZE];
-    size_t i, wc, wbreak, wbeg;
-    bool inword;
-    line_t *top, *bot;
-} buf;
-
-struct {
-    size_t chars, words, lines;
-} total;
 
 void init_buf(void);
 void reset_buf(char *s);
