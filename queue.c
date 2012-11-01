@@ -34,7 +34,7 @@ void line_test(void);
 int main(int argc, char **argv) {
     int i;
     init_buf();
-    tail_test(12, argc, argv);
+    line_test();
     return 0;
 }
 
@@ -54,13 +54,14 @@ void tail_test(int n, int argc, char **argv) {
 }
 
 void line_test() {
-    int i;
+    int i, len;
     char LINE_TEST[] = "This is only a test.",
          LINE_BUFF[BUFF_SIZE];
     for (i = 0; i < strlen(LINE_TEST); i++) {
         insert_ch(LINE_TEST[i]);
-        strncpy(LINE_BUFF, buf.s, buf.i);
-        LINE_BUFF[buf.i] = '\0';
+        len = buf.i;
+        strncpy(LINE_BUFF, buf.s, len);
+        LINE_BUFF[len] = '\0';
         printf("%s\n", LINE_BUFF);
     }
 }
