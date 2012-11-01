@@ -19,9 +19,14 @@ void document_wc(void);
 void document_readfile(char *name);
 
 int main(int argc, char **argv) {
+    char *filename;
     document.text = malloc(DOC_SIZE);
     document.text[0] = '\0';
-    document_wc();
+    if (argc > 1)
+        filename = argv[1];
+    else
+        filename = "untitled.txt";
+    document_readfile(filename);
 
     initscr();
     getmaxyx(stdscr, g_lines, g_columns);
