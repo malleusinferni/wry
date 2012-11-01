@@ -1,7 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
+#define bool char
+#define TRUE 1
+#define FALSE 0
 #define BUFF_SIZE 80
 #define WRAP_SIZE 65
 
@@ -12,7 +16,8 @@ typedef struct line_t {
 
 struct {
     char s[BUFF_SIZE];
-    size_t i;
+    size_t i, wbreak;
+    bool inword;
     line_t *top, *bot;
 } buf;
 
@@ -59,8 +64,12 @@ void line_test() {
          LINE_BUFF[BUFF_SIZE];
     for (i = 0; i < strlen(LINE_TEST); i++) {
         insert_ch(LINE_TEST[i]);
-        len = buf.i;
+        len = buf.wbreak;
         strncpy(LINE_BUFF, buf.s, len);
+        LINE_BUFF[len] = '\0';
+        printf("%s|", LINE_BUFF);
+        len = buf.i - len;
+        strncpy(LINE_BUFF, buf.s + buf.wbreak, len);
         LINE_BUFF[len] = '\0';
         printf("%s\n", LINE_BUFF);
     }
@@ -68,6 +77,7 @@ void line_test() {
 
 void init_buf() {
     buf.i = 0;
+    buf.inword = FALSE;
     buf.top = buf.bot = NULL;
     total.chars = total.words = total.lines = 0;
 }
@@ -124,6 +134,12 @@ void insert_ch(char c) {
     if (c == '\n') {
         break_at(buf.i);
     } else {
+        if (isspace(c) && buf.inword) {
+            buf.wbreak = buf.i;
+            buf.inword = FALSE;
+        } else if (!buf.inword) {
+            buf.inword = TRUE;
+        }
         buf.s[buf.i] = c;
         buf.i++;
     }
