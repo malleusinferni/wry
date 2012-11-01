@@ -168,7 +168,7 @@ void drop_until(int count) {
 void print_queue() {
     line_t *line = buf.top;
     while (line) {
-        puts(line->s);
+        printw("%s\n", line->s);
         line = line->next;
     }
 }
