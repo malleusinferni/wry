@@ -25,6 +25,7 @@ void print_queue(void);
 void drop_until(int count);
 void shift_line(void);
 void push_line(char *s);
+void insert_ch(char c);
 void read_file(FILE *h);
 
 int main(int argc, char **argv) {
@@ -91,16 +92,21 @@ void drop_until(int count) {
     }
 }
 
+void insert_ch(char c) {
+    if (c == '\n') {
+        buf.s[buf.i] = '\0';
+        push_line(buf.s);
+        buf.i = 0;
+    } else {
+        buf.s[buf.i] = c;
+        buf.i++;
+    }
+}
+
 void read_file(FILE *h) {
     char c;
     while ((c = getc(h)) != EOF) {
-        if (c == '\n') {
-            buf.s[buf.i] = '\0';
-            push_line(buf.s);
-            buf.i = 0;
-        } else {
-            buf.s[buf.i++] = c;
-        }
+        insert_ch(c);
     }
 }
 
