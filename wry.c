@@ -86,6 +86,7 @@ int main(int argc, char **argv) {
             append_buf('\n');
             break;
         default:
+            mbuf_msg(file_name);
             if (ch > '\x1f')
                 append_buf(ch);
         }
