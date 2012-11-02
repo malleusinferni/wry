@@ -7,13 +7,6 @@
 #define BUFF_SIZE 80
 #define WRAP_SIZE 65
 
-#define printbuf(...) \
-    do { \
-        char PBUF[BUFF_SIZE]; \
-        snprintf(PBUF, BUFF_SIZE, __VA_ARGS__); \
-        minibufmsg(PBUF); \
-    } while (0)
-
 typedef struct line_t {
     struct line_t *next;
     char s[0];
@@ -31,10 +24,14 @@ struct {
     size_t chars, words, lines;
 } total;
 
+char minibuffer[BUFF_SIZE],
+     file_name[BUFF_SIZE];
+
 bool needs_redisplay = TRUE;
 
 void read_file(char *name);
 void minibufmsg(char *s);
+void printbuf(const char * restrict format, ...);
 
 void init_buf(void);
 void reset_buf(char *s);
@@ -115,6 +112,14 @@ void minibufmsg(char *s) {
         mvprintw(y - 1, x - rlen, "%s", ruler);
     attroff(A_BOLD);
     move(cy, cx);
+}
+
+void printbuf(const char * restrict format, ...) {
+    va_list ap;
+    va_start(ap, format);
+    vsnprintf(minibuffer, BUFF_SIZE, format, ap);
+    va_end(ap);
+    minibufmsg(minibuffer);
 }
 
 void init_buf() {
