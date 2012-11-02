@@ -110,10 +110,7 @@ void read_file(char *name) {
     }
     if ((h = fopen(name, "a"))) {
         buf.out = h;
-        if (newfile)
-            mbuf_fmt("\"%s\" [NEW FILE]", name);
-        else
-            mbuf_fmt("\"%s\"", name);
+        mbuf_fmt(newfile ? "%s [NEW FILE]" : "%s", name);
     }
 }
 
