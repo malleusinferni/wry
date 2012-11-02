@@ -93,6 +93,8 @@ void minibufmsg(char *s) {
     rlen = strlen(ruler);
     getyx(stdscr, cy, cx);
     getmaxyx(stdscr, y, x);
+    move(y - 1, 0);
+    clrtoeol();
     attron(A_BOLD);
     mvprintw(y - 1, 0, "%s", s);
     if (strlen(s) < x - rlen)
