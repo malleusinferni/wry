@@ -38,6 +38,7 @@ void quit(void);
 void init_buf(void);
 void reset_buf(char *s);
 void append_buf(char c);
+void del_buf(size_t i);
 void insert_ch(char c);
 void break_at(size_t i);
 
@@ -68,9 +69,9 @@ int main(int argc, char **argv) {
             quit();
         case '\x08': // ^H
         case '\x7f': // DEL
-            //del_buf(buf.i - 1); break;
+            del_buf(buf.i - 1); break;
         case '\x17': // ^W
-            //del_buf(buf.wbeg); break;
+            del_buf(buf.wbeg); break;
         case '\x15': // ^U
             reset_buf("");
             break;
@@ -185,6 +186,13 @@ void append_buf(char c) {
             reset_buf(save);
         }
     }
+}
+
+void del_buf(size_t i) {
+    char save[BUFF_SIZE];
+    strncpy(save, buf.s, i);
+    save[i] = '\0';
+    reset_buf(save);
 }
 
 void insert_ch(char c) {
