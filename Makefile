@@ -1,10 +1,10 @@
 LDFLAGS=-lncurses
 
-all: test
+all: wry
 
 test: wry
-	./wry declshort.txt
+	./wry
 
 clean:
-	find . -depth 1 -type f -perm +0111 -print -exec rm '{}' ';'
+	rm wry
 
