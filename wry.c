@@ -4,7 +4,6 @@
 #include <ctype.h>
 #include <errno.h>
 
-#define BUFF_SIZE 80
 #define WRAP_SIZE 65
 
 typedef struct line_t {
@@ -13,7 +12,7 @@ typedef struct line_t {
 } line_t;
 
 struct {
-    char s[BUFF_SIZE];
+    char s[BUFSIZ];
     size_t i, wc, wbreak, wbeg;
     bool inword;
     FILE *out;
@@ -24,8 +23,8 @@ struct {
     size_t chars, words, lines;
 } total;
 
-char minibuffer[BUFF_SIZE],
-     file_name[BUFF_SIZE];
+char minibuffer[BUFSIZ],
+     file_name[BUFSIZ];
 
 bool needs_redisplay = TRUE;
 
@@ -115,8 +114,8 @@ void read_file(char *name) {
 
 void mbuf_display() {
     int cy, cx, y, x, rlen;
-    char ruler[BUFF_SIZE];
-    snprintf(ruler, BUFF_SIZE,
+    char ruler[BUFSIZ];
+    snprintf(ruler, BUFSIZ,
         " Ln %lu Wd %lu Ch %lu    ",
         total.lines + 1,
         total.words + buf.wc,
@@ -135,13 +134,13 @@ void mbuf_display() {
 }
 
 void mbuf_msg(char *s) {
-    snprintf(minibuffer, BUFF_SIZE, "%s", s);
+    snprintf(minibuffer, BUFSIZ, "%s", s);
 }
 
 void mbuf_fmt(const char * restrict format, ...) {
     va_list ap;
     va_start(ap, format);
-    vsnprintf(minibuffer, BUFF_SIZE, format, ap);
+    vsnprintf(minibuffer, BUFSIZ, format, ap);
     va_end(ap);
 }
 
@@ -176,7 +175,7 @@ void append_buf(char c) {
     } else {
         insert_ch(c);
         if (buf.i > WRAP_SIZE) {
-            char save[BUFF_SIZE] = "";
+            char save[BUFSIZ] = "";
             if (buf.inword) {
                 // TODO Handle words too long to wrap
                 strncpy(save, buf.s + buf.wbeg, buf.i - buf.wbeg);
@@ -189,7 +188,7 @@ void append_buf(char c) {
 }
 
 void del_buf(size_t i) {
-    char save[BUFF_SIZE];
+    char save[BUFSIZ];
     strncpy(save, buf.s, i);
     save[i] = '\0';
     reset_buf(save);
@@ -257,7 +256,7 @@ void drop_until(int count) {
 }
 
 void print_queue() {
-    char screenbuf[BUFF_SIZE];
+    char screenbuf[BUFSIZ];
     line_t *line = buf.top;
     move(0, 0);
     clrtobot();
