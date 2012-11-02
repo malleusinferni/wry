@@ -229,10 +229,16 @@ void drop_until(int count) {
 }
 
 void print_queue() {
+    char screenbuf[BUFF_SIZE];
     line_t *line = buf.top;
+    move(0, 0);
+    clrtobot();
     while (line) {
         printw("%s\n", line->s);
         line = line->next;
     }
+    strncpy(screenbuf, buf.s, buf.i);
+    screenbuf[buf.i] = '\0';
+    printw("%s", screenbuf);
 }
 
