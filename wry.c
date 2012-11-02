@@ -30,8 +30,9 @@ char minibuffer[BUFF_SIZE],
 bool needs_redisplay = TRUE;
 
 void read_file(char *name);
-void minibufmsg(char *s);
-void printbuf(const char * restrict format, ...);
+void mbuf_display(void);
+void mbuf_msg(char *s);
+void mbuf_fmt(const char * restrict format, ...);
 
 void init_buf(void);
 void reset_buf(char *s);
@@ -56,7 +57,7 @@ int main(int argc, char **argv) {
         // Redisplay
         drop_until(getmaxy(stdscr) / 2);
         print_queue();
-        minibufmsg("Press any key to quit");
+        mbuf_display();
         refresh();
 
         // Wait for input
@@ -82,19 +83,19 @@ void read_file(char *name) {
     } else if (errno == ENOENT) {
         newfile = TRUE;
     } else {
-        printbuf("Error opening %s: %s", name, strerror(errno));
+        mbuf_fmt("Error opening %s: %s", name, strerror(errno));
         return;
     }
     if ((h = fopen(name, "a"))) {
         buf.out = h;
         if (newfile)
-            printbuf("\"%s\" [NEW FILE]", name);
+            mbuf_fmt("\"%s\" [NEW FILE]", name);
         else
-            printbuf("\"%s\"", name);
+            mbuf_fmt("\"%s\"", name);
     }
 }
 
-void minibufmsg(char *s) {
+void mbuf_display() {
     int cy, cx, y, x, rlen;
     char ruler[BUFF_SIZE];
     snprintf(ruler, BUFF_SIZE,
@@ -108,19 +109,22 @@ void minibufmsg(char *s) {
     move(y - 1, 0);
     clrtoeol();
     attron(A_BOLD);
-    mvprintw(y - 1, 0, "%s", s);
-    if (strlen(s) < x - rlen)
+    mvprintw(y - 1, 0, "%s", minibuffer);
+    if (strlen(minibuffer) < x - rlen)
         mvprintw(y - 1, x - rlen, "%s", ruler);
     attroff(A_BOLD);
     move(cy, cx);
 }
 
-void printbuf(const char * restrict format, ...) {
+void mbuf_msg(char *s) {
+    snprintf(minibuffer, BUFF_SIZE, "%s", s);
+}
+
+void mbuf_fmt(const char * restrict format, ...) {
     va_list ap;
     va_start(ap, format);
     vsnprintf(minibuffer, BUFF_SIZE, format, ap);
     va_end(ap);
-    minibufmsg(minibuffer);
 }
 
 void init_buf() {
