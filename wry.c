@@ -201,8 +201,8 @@ void insert_ch(char c) {
             buf.wbreak = buf.i;
             buf.inword = FALSE;
         }
-        buf.wbeg = buf.i + 1;
     } else if (!buf.inword) {
+        buf.wbeg = buf.i;
         buf.inword = TRUE;
         buf.wc++;
     }
