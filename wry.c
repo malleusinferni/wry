@@ -1,3 +1,6 @@
+// Wry: A text editor for vampires
+// Last modified Nov. 01, 2012
+
 #include <ncurses.h>
 #include <stdlib.h>
 #include <string.h>
