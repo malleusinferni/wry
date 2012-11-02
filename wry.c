@@ -194,8 +194,8 @@ void push_line(char *s) {
         buf.bot = nl;
     }
     if (buf.out) {
-        fputs(nl->s, buf.out);
-        // fflush(buf.out);
+        fprintf(buf.out, "%s\n", nl->s);
+        fflush(buf.out);
     }
 }
 
