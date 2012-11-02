@@ -70,12 +70,15 @@ void read_file(char *name) {
     } else if (errno == ENOENT) {
         newfile = TRUE;
     } else {
-        minibufmsg("ERROR");
+        printbuf("Error opening %s: %s", name, strerror(errno));
         return;
     }
     if ((h = fopen(name, "a"))) {
         buf.out = h;
-        minibufmsg(newfile ? "[NEW FILE]" : "File opened");
+        if (newfile)
+            printbuf("\"%s\" [NEW FILE]", name);
+        else
+            printbuf("\"%s\"", name);
     }
 }
 
