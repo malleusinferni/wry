@@ -31,6 +31,8 @@ struct {
     size_t chars, words, lines;
 } total;
 
+bool needs_redisplay = TRUE;
+
 void read_file(char *name);
 void minibufmsg(char *s);
 
@@ -48,14 +50,26 @@ void print_queue(void);
 int main(int argc, char **argv) {
     init_buf();
     initscr();
+    cbreak();
+    noecho();
     if (argc > 1) read_file(argv[1]);
-    drop_until(getmaxy(stdscr) / 2);
-    print_queue();
-    minibufmsg("Press any key to quit.");
 
-    refresh();
-    getch();
-    endwin();
+    while (TRUE) {
+        int ch;
+        // Redisplay
+        drop_until(getmaxy(stdscr) / 2);
+        print_queue();
+        minibufmsg("Press any key to quit");
+        refresh();
+
+        // Wait for input
+        if ((ch = getch())) {
+            append_buf('\n');
+            fclose(buf.out);
+            endwin();
+            exit(0);
+        }
+    }
     return 0;
 }
 
