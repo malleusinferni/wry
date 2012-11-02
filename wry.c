@@ -48,10 +48,14 @@ void print_queue(void);
 
 int main(int argc, char **argv) {
     init_buf();
+    if (argc > 1)
+        strncpy(file_name, argv[1], BUFSIZ);
+    else
+        strcpy(file_name, "untitled.txt");
+    read_file(file_name);
     initscr();
     cbreak();
     noecho();
-    if (argc > 1) read_file(argv[1]);
 
     while (TRUE) {
         int ch;
