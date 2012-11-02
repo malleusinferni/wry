@@ -62,8 +62,28 @@ int main(int argc, char **argv) {
         refresh();
 
         // Wait for input
-        if ((ch = getch())) {
+        switch ((ch = getch())) {
+        case EOF:
+        case '\x04': // ^D
             quit();
+        case '\x08': // ^H
+        case '\x7f': // DEL
+            //del_buf(buf.i - 1); break;
+        case '\x17': // ^W
+            //del_buf(buf.wbeg); break;
+        case '\x15': // ^U
+            reset_buf("");
+            break;
+        case '\x1b': // ESC
+            mbuf_msg("Press CTRL+D to quit");
+            break;
+        case '\r':
+        case '\n':
+            append_buf('\n');
+            break;
+        default:
+            if (ch > '\x1f')
+                append_buf(ch);
         }
     }
     return 0;
