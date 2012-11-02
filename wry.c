@@ -7,6 +7,13 @@
 #define BUFF_SIZE 80
 #define WRAP_SIZE 65
 
+#define printbuf(...) \
+    do { \
+        char PBUF[BUFF_SIZE]; \
+        snprintf(PBUF, BUFF_SIZE, __VA_ARGS__); \
+        minibufmsg(PBUF); \
+    } while (0)
+
 typedef struct line_t {
     struct line_t *next;
     char s[0];
