@@ -61,7 +61,8 @@ int main(int argc, char **argv) {
 
         // Wait for input
         if ((ch = getch())) {
-            append_buf('\n');
+            if (buf.i > 0)
+                append_buf('\n');
             fclose(buf.out);
             endwin();
             exit(0);
@@ -191,6 +192,10 @@ void push_line(char *s) {
     } else {
         buf.top = nl;
         buf.bot = nl;
+    }
+    if (buf.out) {
+        fputs(nl->s, buf.out);
+        // fflush(buf.out);
     }
 }
 
