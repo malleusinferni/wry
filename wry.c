@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
 
 #define BUFF_SIZE 80
 #define WRAP_SIZE 65
@@ -15,6 +16,7 @@ struct {
     char s[BUFF_SIZE];
     size_t i, wc, wbreak, wbeg;
     bool inword;
+    FILE *out;
     line_t *top, *bot;
 } buf;
 
@@ -53,13 +55,21 @@ int main(int argc, char **argv) {
 void read_file(char *name) {
     FILE *h;
     char c;
-    if (!(h = fopen(name, "r"))) {
+    bool newfile = FALSE;
+    if ((h = fopen(name, "r"))) {
+        while ((c = getc(h)) != EOF)
+            append_buf(c);
+        fclose(h);
+    } else if (errno == ENOENT) {
+        newfile = TRUE;
+    } else {
+        minibufmsg("ERROR");
         return;
     }
-    while ((c = getc(h)) != EOF) {
-        append_buf(c);
+    if ((h = fopen(name, "a"))) {
+        buf.out = h;
+        minibufmsg(newfile ? "[NEW FILE]" : "File opened");
     }
-    fclose(h);
 }
 
 void minibufmsg(char *s) {
