@@ -33,6 +33,7 @@ void read_file(char *name);
 void mbuf_display(void);
 void mbuf_msg(char *s);
 void mbuf_fmt(const char * restrict format, ...);
+void quit(void);
 
 void init_buf(void);
 void reset_buf(char *s);
@@ -62,11 +63,7 @@ int main(int argc, char **argv) {
 
         // Wait for input
         if ((ch = getch())) {
-            if (buf.i > 0)
-                append_buf('\n');
-            fclose(buf.out);
-            endwin();
-            exit(0);
+            quit();
         }
     }
     return 0;
@@ -125,6 +122,14 @@ void mbuf_fmt(const char * restrict format, ...) {
     va_start(ap, format);
     vsnprintf(minibuffer, BUFF_SIZE, format, ap);
     va_end(ap);
+}
+
+void quit() {
+    if (buf.i > 0)
+        append_buf('\n');
+    fclose(buf.out);
+    endwin();
+    exit(0);
 }
 
 void init_buf() {
