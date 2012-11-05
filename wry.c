@@ -34,7 +34,7 @@ bool needs_redisplay = TRUE;
 void read_file(char *name);
 void mbuf_display(void);
 void mbuf_msg(char *s);
-void mbuf_fmt(const char * restrict format, ...);
+void mbuf_fmt(const char * format, ...);
 void quit(void);
 
 void init_buf(void);
@@ -142,7 +142,7 @@ void mbuf_msg(char *s) {
     snprintf(minibuffer, BUFSIZ, "%s", s);
 }
 
-void mbuf_fmt(const char * restrict format, ...) {
+void mbuf_fmt(const char * format, ...) {
     va_list ap;
     va_start(ap, format);
     vsnprintf(minibuffer, BUFSIZ, format, ap);
