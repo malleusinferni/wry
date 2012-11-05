@@ -13,6 +13,14 @@ yet. This is an itch I was not able to scratch in other ways at
 the time of writing. NaNoWriMo folks might find it useful. If
 you're doing anything else, all bets are off.
 
+## SCREENSHOTS
+
+![](ebert640.jpg)
+
+Editing a blogpost. Wry is running inside of [Cathode].
+
+[Cathode]: http://www.secretgeometry.com/
+
 ## CONTROLS
 
 - **Ctrl+W** deletes one word.
