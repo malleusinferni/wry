@@ -15,7 +15,7 @@ you're doing anything else, all bets are off.
 
 ## SCREENSHOTS
 
-![](ebert640.jpg)
+![](http://i.imgur.com/0iaJd.jpg)
 
 Editing a blogpost. Wry is running inside of [Cathode].
 
