@@ -1,4 +1,4 @@
-# wry: A text editor for vampires
+# Wry: A text editor for vampires
 
 This is a rough draft of a program for writing rough drafts. It's
 not really a text "editor," because it's strictly input-oriented.
