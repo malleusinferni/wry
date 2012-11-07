@@ -194,6 +194,7 @@ void append_buf(char c) {
 
 void del_buf(size_t i) {
     char save[BUFSIZ];
+    if (buf.i < 1) return;
     strncpy(save, buf.s, i);
     save[i] = '\0';
     reset_buf(save);
