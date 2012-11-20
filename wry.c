@@ -1,5 +1,9 @@
-// Wry: A text editor for vampires
-// Last modified Nov. 01, 2012
+/* Wry: A text editor for vampires
+ * Copyright (c) 2012, RSMW.net
+ *
+ * This software is under the WTF Public License.
+ * Just do whatever the fuck you want with it.
+ */
 
 #include <ncurses.h>
 #include <stdlib.h>

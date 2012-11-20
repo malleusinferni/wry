@@ -60,3 +60,9 @@ Editing a blogpost. Wry is running inside of [Cathode].
 "Wry" rhymes with "three," but you are allowed to rhyme it with
 "try" unless you have renounced your humanity.
 
+## LICENSE
+
+Wry may be copied, modified, and redistributed under the terms of
+the WTFPL (WTF public license, version W-bluesky). Do whatever
+the fuck you want with it.
+
