@@ -35,6 +35,8 @@ char minibuffer[BUFSIZ],
 
 bool needs_redisplay = TRUE;
 
+int minibuf_attrs = 0;
+
 void read_file(char *name);
 void mbuf_display(void);
 void mbuf_msg(char *s);
@@ -63,6 +65,7 @@ int main(int argc, char **argv) {
     initscr();
     cbreak();
     noecho();
+    minibuf_attrs = A_BOLD;
 
     while (TRUE) {
         int ch;
@@ -134,11 +137,11 @@ void mbuf_display() {
     getmaxyx(stdscr, y, x);
     move(y - 1, 0);
     clrtoeol();
-    attron(A_BOLD);
+    attron(minibuf_attrs);
     mvprintw(y - 1, 0, "%s", minibuffer);
     if (strlen(minibuffer) < x - rlen)
         mvprintw(y - 1, x - rlen, "%s", ruler);
-    attroff(A_BOLD);
+    attroff(minibuf_attrs);
     move(cy, cx);
 }
 
