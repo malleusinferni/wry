@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
         if (COLORS > 255)
             white = 231;
         else if (COLORS > 87)
-            white = 88;
+            white = 79;
         else
             white = 15;
         init_pair(1, white, 0);
