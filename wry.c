@@ -65,7 +65,20 @@ int main(int argc, char **argv) {
     initscr();
     cbreak();
     noecho();
-    minibuf_attrs = A_BOLD;
+    if (has_colors()) {
+        int white;
+        start_color();
+        if (COLORS > 255)
+            white = 231;
+        else if (COLORS > 87)
+            white = 88;
+        else
+            white = 15;
+        init_pair(1, white, 0);
+        minibuf_attrs = COLOR_PAIR(1);
+    } else {
+        minibuf_attrs = A_BOLD;
+    }
 
     while (TRUE) {
         int ch;
