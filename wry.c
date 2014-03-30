@@ -41,8 +41,9 @@ void read_file(char *name);
 void mbuf_display(void);
 void mbuf_msg(char *s);
 void mbuf_fmt(const char * format, ...);
+void save_quit(void);
+void save(void);
 void quit(void);
-
 void init_buf(void);
 void reset_buf(char *s);
 void append_buf(char c);
@@ -92,6 +93,11 @@ int main(int argc, char **argv) {
         switch ((ch = getch())) {
         case EOF:
         case '\x04': // ^D
+            save_quit();
+        case '\x0F': // ^O
+            save();
+            break;
+        case '\x12': // ^R
             quit();
         case '\x08': // ^H
         case '\x7f': // DEL
@@ -169,7 +175,13 @@ void mbuf_fmt(const char * format, ...) {
     va_end(ap);
 }
 
-void quit() {
+void save() {
+    if (buf.i > 0)
+        break_at(buf.i);
+        reset_buf("");
+}
+
+void save_quit() {
     if (buf.i > 0)
         append_buf('\n');
     fclose(buf.out);
@@ -177,6 +189,11 @@ void quit() {
     exit(0);
 }
 
+void quit() {
+    fclose(buf.out);
+    endwin();
+    exit(0);
+}
 void init_buf() {
     reset_buf("");
     buf.top = buf.bot = NULL;

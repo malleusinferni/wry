@@ -31,6 +31,10 @@ Editing a blogpost. Wry is running inside of [Cathode].
 
 - **Ctrl+D** saves the text of the current line and quits.
 
+- **Ctrl+O** saves the file
+
+- **Ctrl+R** quit
+
 ## KNOWN BUGS
 
 * The whole thing is very crude right now. In particular, word
