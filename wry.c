@@ -1,4 +1,13 @@
 /* Wry: A text editor for vampires
+
+
+
+
+
+
+*/
+
+/* 
  * Copyright (c) 2012, RSMW.net
  *
  * This software is under the WTF Public License.
@@ -36,7 +45,6 @@ char minibuffer[BUFSIZ],
 bool needs_redisplay = TRUE;
 
 int minibuf_attrs = 0;
-
 void read_file(char *name);
 void mbuf_display(void);
 void mbuf_msg(char *s);
@@ -57,15 +65,23 @@ void drop_until(int count);
 void print_queue(void);
 
 int main(int argc, char **argv) {
+
+    //Initialize buffer
     init_buf();
+
+    //Open file by args otherwise open default file
     if (argc > 1)
         strncpy(file_name, argv[1], BUFSIZ);
     else
         strcpy(file_name, "untitled.txt");
+
+    // Read our....file,duh
     read_file(file_name);
     initscr();
     cbreak();
     noecho();
+
+
     if (has_colors()) {
         int white;
         start_color();
@@ -81,6 +97,8 @@ int main(int argc, char **argv) {
         minibuf_attrs = A_BOLD;
     }
 
+
+    //Main loop
     while (TRUE) {
         int ch;
         // Redisplay
@@ -100,9 +118,12 @@ int main(int argc, char **argv) {
         case '\x12': // ^R
             quit();
         case '\x08': // ^H
+            save();
+            mbuf_msg("Saved");            
+            break;
         case '\x7f': // DEL
             del_buf(buf.i - 1); break;
-        case '\x17': // ^W
+        case '\x17': // ^W delete line
             del_buf(buf.wbeg); break;
         case '\x15': // ^U
             reset_buf("");
@@ -146,16 +167,23 @@ void read_file(char *name) {
 void mbuf_display() {
     int cy, cx, y, x, rlen;
     char ruler[BUFSIZ];
+    //write to the buffer
+    //ruler is our word line chars count at the 
+    //bottom right of the screen
     snprintf(ruler, BUFSIZ,
         " Ln %lu Wd %lu Ch %lu    ",
         total.lines + 1,
         total.words + buf.wc,
         total.chars + buf.i);
     rlen = strlen(ruler);
+    //get curses cursor and window coordinates
     getyx(stdscr, cy, cx);
     getmaxyx(stdscr, y, x);
+    //move curses window cursor 
     move(y - 1, 0);
+    //clear curses window
     clrtoeol();
+    
     attron(minibuf_attrs);
     mvprintw(y - 1, 0, "%s", minibuffer);
     if (strlen(minibuffer) < x - rlen)
@@ -252,16 +280,19 @@ void insert_ch(char c) {
     buf.i++;
 }
 
+// Update stats and call pushline to save to buffer
 void break_at(size_t i) {
     buf.s[i] = '\0';
-    total.words += buf.wc;
-    total.chars += strlen(buf.s) + 1;
-    total.lines++;
+    total.words += buf.wc; //word count
+    total.chars += strlen(buf.s) + 1; //character count
+    total.lines++; //number of lines
     push_line(buf.s);
 }
 
+// write screen contents to buffer (file)
 void push_line(char *s) {
     size_t len = strlen(s) + 1;
+    //lines on screen
     line_t *nl = malloc(sizeof(line_t) + len);
     strncpy(nl->s, s, len);
     nl->next = NULL;
