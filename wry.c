@@ -19,8 +19,18 @@
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
+#include <stdio.h>
 
 #define WRAP_SIZE 65
+#define max(a, b) \
+   ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a > _b ? _a : _b; })
+
+
+int min(int a, int b) {
+    return a < b ? a : b;
+}
 
 typedef struct line_t {
     struct line_t *next;
@@ -40,28 +50,42 @@ struct {
 } total;
 
 char minibuffer[BUFSIZ],
-     file_name[BUFSIZ];
-
-bool needs_redisplay = TRUE;
+        file_name[BUFSIZ];
 
 int minibuf_attrs = 0;
+
 void read_file(char *name);
+
 void mbuf_display(void);
+
 void mbuf_msg(char *s);
-void mbuf_fmt(const char * format, ...);
+
+void mbuf_fmt(const char *format, ...);
+
 void save_quit(void);
+
 void save(void);
+
 void quit(void);
+
 void init_buf(void);
+
 void reset_buf(char *s);
+
 void append_buf(char c);
+
 void del_buf(size_t i);
+
 void insert_ch(char c);
+
 void break_at(size_t i);
 
 void push_line(char *s);
+
 void shift_line(void);
+
 void drop_until(int count);
+
 void print_queue(void);
 
 int main(int argc, char **argv) {
@@ -80,7 +104,8 @@ int main(int argc, char **argv) {
     initscr();
     cbreak();
     noecho();
-
+    // Enable keypad mode
+    keypad(stdscr, TRUE);
 
     if (has_colors()) {
         int white;
@@ -101,6 +126,8 @@ int main(int argc, char **argv) {
     //Main loop
     while (TRUE) {
         int ch;
+        int cy, cx;
+
         // Redisplay
         drop_until(getmaxy(stdscr) / 2);
         print_queue();
@@ -109,36 +136,48 @@ int main(int argc, char **argv) {
 
         // Wait for input
         switch ((ch = getch())) {
-        case EOF:
-        case '\x04': // ^D
-            save_quit();
-        case '\x0F': // ^O
-            save();
-            break;
-        case '\x12': // ^R
-            quit();
-        case '\x08': // ^H
-            save();
-            mbuf_msg("Saved");            
-            break;
-        case '\x7f': // DEL
-            del_buf(buf.i - 1); break;
-        case '\x17': // ^W delete line
-            del_buf(buf.wbeg); break;
-        case '\x15': // ^U
-            reset_buf("");
-            break;
-        case '\x1b': // ESC
-            mbuf_msg("Press CTRL+D to quit");
-            break;
-        case '\r':
-        case '\n':
-            append_buf('\n');
-            break;
-        default:
-            mbuf_msg(file_name);
-            if (ch > '\x1f')
-                append_buf(ch);
+            case EOF:
+            case '\x04': // ^D
+                save_quit();
+            case '\x14': // ^T
+                save();
+                mbuf_msg("Saved");
+                break;
+            case '\x12': // ^R
+                quit();
+            case '\x7f': // DEL
+                del_buf(buf.i - 1);
+                break;
+            case '\x17': // ^W delete word
+                del_buf(buf.wbeg);
+                break;
+            case '\x05': // ^E delete line
+                reset_buf("");
+                break;
+            case '\x1b': // ESC
+                mbuf_msg("Press CTRL+D to quit");
+                break;
+            case '\x15': // ^U
+                if (cy > 0) {
+                    cy = max(cy - 1, 0);
+                    move(cy, cx);
+                    char msg[BUFSIZ];
+                    sprintf(msg, "Moving cursor to (%d, %d)", cy, cx);
+
+                    getyx(stdscr, cy, cx); // Update cy and cx
+                    refresh(); // Update the screen
+                    mbuf_msg(msg);
+                }
+                break;
+
+            case '\r':
+            case '\n':
+                append_buf('\n');
+                break;
+            default:
+                mbuf_msg(file_name);
+                if (ch > '\x1f')
+                    append_buf(ch);
         }
     }
     return 0;
@@ -171,10 +210,10 @@ void mbuf_display() {
     //ruler is our word line chars count at the 
     //bottom right of the screen
     snprintf(ruler, BUFSIZ,
-        " Ln %lu Wd %lu Ch %lu    ",
-        total.lines + 1,
-        total.words + buf.wc,
-        total.chars + buf.i);
+             " Ln %lu Wd %lu Ch %lu    ",
+             total.lines + 1,
+             total.words + buf.wc,
+             total.chars + buf.i);
     rlen = strlen(ruler);
     //get curses cursor and window coordinates
     getyx(stdscr, cy, cx);
@@ -183,12 +222,14 @@ void mbuf_display() {
     move(y - 1, 0);
     //clear curses window
     clrtoeol();
-    
+
     attron(minibuf_attrs);
     mvprintw(y - 1, 0, "%s", minibuffer);
+    // If minibuffer fits in the screen, print the ruler
     if (strlen(minibuffer) < x - rlen)
         mvprintw(y - 1, x - rlen, "%s", ruler);
     attroff(minibuf_attrs);
+    // move cursor to original position
     move(cy, cx);
 }
 
@@ -196,7 +237,7 @@ void mbuf_msg(char *s) {
     snprintf(minibuffer, BUFSIZ, "%s", s);
 }
 
-void mbuf_fmt(const char * format, ...) {
+void mbuf_fmt(const char *format, ...) {
     va_list ap;
     va_start(ap, format);
     vsnprintf(minibuffer, BUFSIZ, format, ap);
@@ -206,7 +247,7 @@ void mbuf_fmt(const char * format, ...) {
 void save() {
     if (buf.i > 0)
         break_at(buf.i);
-        reset_buf("");
+    reset_buf("");
 }
 
 void save_quit() {
@@ -222,6 +263,7 @@ void quit() {
     endwin();
     exit(0);
 }
+
 void init_buf() {
     reset_buf("");
     buf.top = buf.bot = NULL;
@@ -280,6 +322,7 @@ void insert_ch(char c) {
     buf.i++;
 }
 
+
 // Update stats and call pushline to save to buffer
 void break_at(size_t i) {
     buf.s[i] = '\0';
@@ -329,9 +372,13 @@ void drop_until(int count) {
     }
 }
 
+
 void print_queue() {
     char screenbuf[BUFSIZ];
     line_t *line = buf.top;
+    // TODO: fix this to move cursor
+    //int row, col;
+    //getyx(stdscr, row, col); // get current cursor position
     move(0, 0);
     clrtobot();
     while (line) {
@@ -341,5 +388,6 @@ void print_queue() {
     strncpy(screenbuf, buf.s, buf.i);
     screenbuf[buf.i] = '\0';
     printw("%s", screenbuf);
+    //move(row, col); // restore cursor position
+    refresh();
 }
-
