@@ -25,15 +25,16 @@ Editing a blogpost. Wry is running inside of [Cathode].
 
 - **Ctrl+W** deletes one word.
 
-- **Ctrl+U** deletes all text on the current line.
+- **Ctrl+E** deletes all text on the current line.
 
-- **Ctrl+H** and **Backspace** delete one character.
+- **Backspace** delete one character.
 
 - **Ctrl+D** saves the text of the current line and quits.
 
-- **Ctrl+O** saves the file
+- **Ctrl+T** saves the file
 
 - **Ctrl+R** quit
+- **Ctrl+U** Move arrow up
 
 ## KNOWN BUGS
 
